@@ -16,11 +16,13 @@ public class ServerConnectClientThread extends Thread{
     public void run() {
         while (true) {
             try {
+                //当循环读取的时候，发送端就不能关闭，如果关闭就会导致其出现异常；
                 ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
                 Message message = (Message) ois.readObject();
                 //后续的message处理
             } catch (Exception e) {
                 e.printStackTrace();
+                break;
             }
         }
     }

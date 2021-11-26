@@ -21,14 +21,8 @@ public class ClientService {
     boolean logUpSuccess;
 
     //账号登陆，返回账号登陆是否成功
-    public boolean logIn() throws IOException {
+    public boolean logIn(String userId,String psw) throws IOException {
             logInSuccess=false;
-            System.out.println("请输入您的账号");
-            s=new Scanner(System.in);
-            userId=s.next();
-            System.out.println("请输入您的密码");
-            s=new Scanner(System.in);
-            psw=s.next();
             User user=new User(userId,psw);
             if (!accountExist(user)){
                 System.out.println("您的账号或者密码输入错误，请重新输入。");
@@ -47,6 +41,7 @@ public class ClientService {
         try {
             //发送用户到服务端
             logInSocket=new Socket(InetAddress.getLocalHost(),7777);
+            System.out.println("登陆接口已经连通");
             oos=new ObjectOutputStream(logInSocket.getOutputStream());
             oos.writeObject(user);
 
@@ -58,6 +53,8 @@ public class ClientService {
                 ccs.start();
                 ManageClientThread.add(user,ccs);
                 isExist=true;
+            }else {
+                logInSocket.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,6 +80,7 @@ public class ClientService {
                 isLoop = true;
             }else {
                 System.out.println("您输入的账号密码，符合要求，正在注册。。。。");
+
                 isLoop=false;
             }
         }
@@ -104,14 +102,16 @@ public class ClientService {
         ObjectInputStream ois;
         ObjectOutputStream oos;
         try {
-            logUpSocket=new Socket(InetAddress.getLocalHost(),8888);
+            logUpSocket=new Socket(InetAddress.getLocalHost(),9999);
             ois=new ObjectInputStream(logUpSocket.getInputStream());
             oos=new ObjectOutputStream(logUpSocket.getOutputStream());
             oos.writeObject(user);
-
             Message ms=(Message)ois.readObject();
             if (ms.getMesType()==MesType.MESSAGE_LOG_UP_SUCCESS){
                 logUpSuccess=true;
+                System.out.println("注册成功!您可以登陆了！");
+            }else {
+                System.out.println(ms.getContent());
             }
         } catch (Exception e) {
             e.printStackTrace();

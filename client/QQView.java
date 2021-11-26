@@ -1,5 +1,7 @@
 package com.dltour.qq.client;
 
+import com.dltour.qq.common.User;
+
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -13,6 +15,7 @@ public class QQView {
     private static boolean isExist=false;
     String key="";
     String userId;
+    String psw;
     Scanner s;
 //TODO list 无法解决无法第二次登陆的问题，第二次登陆会显示出连接失败
 
@@ -37,7 +40,6 @@ public class QQView {
             System.out.println("==============网络登陆系统==============");
             System.out.println("1 登陆系统");
             System.out.println("9 退出系统");
-            System.out.println("请输入您的选择:");
             s=new Scanner(System.in);
             key=s.next();
             switch (key){
@@ -52,7 +54,13 @@ public class QQView {
                         key = s.next();
                         switch (key) {
                             case "1":
-                                secLoop=!new ClientService().logIn();
+                                System.out.println("请输入您的账号");
+                                s=new Scanner(System.in);
+                                userId=s.next();
+                                System.out.println("请输入您的密码");
+                                s=new Scanner(System.in);
+                                psw=s.next();
+                                secLoop=!new ClientService().logIn(userId,psw);
                                 thirdLoop=!secLoop;
                                 break;
                             case "2":
@@ -71,12 +79,11 @@ public class QQView {
                     }
                     //判断出服务器的文件中的用户名和密码是否和用户输入一致
                     while (thirdLoop){
-                        System.out.println("==============网络服务二级菜单（用户名"+userId+")==============");
+                        System.out.println("==============网络服务二级菜单（用户名："+userId+")==============");
                         System.out.println("1 在线用户");
                         System.out.println("2 私聊用户");
                         System.out.println("3 群发消息");
                         System.out.println("9 退出系统");
-                        System.out.println("请输入您的选择:");
                         s=new Scanner(System.in);
                         key=s.next();
                         switch (key){
@@ -91,6 +98,7 @@ public class QQView {
                                 break;
                             case "9":
                                 System.out.println("退出系统成功!");
+                                //TODO 当用户选择退出登陆的时候，切断连接的通信线程；
                                 secLoop=false;
                                 loop=false;
                                 thirdLoop=false;
