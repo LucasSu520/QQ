@@ -4,6 +4,7 @@ import com.dltour.qq.common.MesType;
 import com.dltour.qq.common.Message;
 import com.dltour.qq.common.User;
 
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -13,6 +14,7 @@ import java.util.Scanner;
 
 public class ClientService {
     Scanner s;
+    User user;
     String userId;
     String psw;
     Socket logInSocket;
@@ -20,15 +22,38 @@ public class ClientService {
     boolean logInSuccess;
     boolean logUpSuccess;
 
+
+    public ClientService() {
+    }
+
+    public ClientService(User user) {
+        this.user = user;
+    }
+
+    public void getOnlineUser() {
+        Message ms=new Message();
+        ms.setMesType(MesType.MESSAGE_GET_ONLINE_USERS);
+        try {
+            ClientConnectServerThread ccst;
+            ccst=ManageClientThread.hm.get(user);
+            logInSocket= ccst.getSocket();
+            ObjectOutputStream oos=new ObjectOutputStream(logInSocket.getOutputStream());
+            oos.writeObject(ms);
+            //TODO 如何让主线程在子线程启动后，在特殊位置再次启动主线程
+            ccst.join(10);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     //账号登陆，返回账号登陆是否成功
-    public boolean logIn(String userId,String psw) throws IOException {
+    public boolean logIn(User user) throws IOException {
             logInSuccess=false;
-            User user=new User(userId,psw);
             if (!accountExist(user)){
                 System.out.println("您的账号或者密码输入错误，请重新输入。");
             }else {
                 logInSuccess=true;
-                System.out.println("欢迎回来用户（"+userId+"）!");
+                System.out.println("欢迎回来用户（"+user.getId()+"）!");
             }
             return logInSuccess;
         }

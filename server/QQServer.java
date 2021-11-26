@@ -102,8 +102,6 @@ public class QQServer extends Thread{
                 }
             }
         }
-
-
         //接受到了客户端的发送的客户数据检测登陆
         //接受客户端的注册数据，然后写入.dat的文件
     }
@@ -115,7 +113,6 @@ public class QQServer extends Thread{
             super.run();
             Socket socket = null;
             System.out.println("9999端口已经创建，等待接通。。。。");
-
             while (true) {
                 try {
                     socket = logUpServerSocket.accept();
@@ -127,24 +124,21 @@ public class QQServer extends Thread{
                 if (socket != null) {
                     try {
                         Message ms=new Message();
-                        System.out.println("节后");
                         oos = new ObjectOutputStream(socket.getOutputStream());
                         ois = new ObjectInputStream(socket.getInputStream());
                         User user = (User) ois.readObject();
-                        System.out.println("节后");
                         //TODO 判断vector中是否有该用户
                         User user1=validUsers.get(user.getId());
                         if (user1!=null){
                             ms.setMesType(MesType.MESSAGE_LOG_UP_FAIL);
                             ms.setContent("该用户名已存在！");
                             System.out.println(validUsers.size());
-                            oos.writeObject(ms);
                         }else {
                             saveUser(user);
                             System.out.println("注册成功!");
                             ms.setMesType(MesType.MESSAGE_LOG_UP_SUCCESS);
-                            oos.writeObject(ms);
                         }
+                        oos.writeObject(ms);
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
                     }

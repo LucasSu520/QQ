@@ -1,9 +1,11 @@
 package com.dltour.qq.client;
 
+
 import com.dltour.qq.common.User;
 
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.concurrent.CountDownLatch;
 
 
 //以后界面和逻辑一定要分开;
@@ -16,6 +18,7 @@ public class QQView {
     String key="";
     String userId;
     String psw;
+    User user;
     Scanner s;
 //TODO list 无法解决无法第二次登陆的问题，第二次登陆会显示出连接失败
 
@@ -27,7 +30,6 @@ public class QQView {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 
@@ -60,7 +62,8 @@ public class QQView {
                                 System.out.println("请输入您的密码");
                                 s=new Scanner(System.in);
                                 psw=s.next();
-                                secLoop=!new ClientService().logIn(userId,psw);
+                                user=new User(userId,psw);
+                                secLoop=!new ClientService().logIn(user);
                                 thirdLoop=!secLoop;
                                 break;
                             case "2":
@@ -79,7 +82,7 @@ public class QQView {
                     }
                     //判断出服务器的文件中的用户名和密码是否和用户输入一致
                     while (thirdLoop){
-                        System.out.println("==============网络服务二级菜单（用户名："+userId+")==============");
+                        System.out.println("==============网络服务二级菜单（用户名："+user.getId()+")==============");
                         System.out.println("1 在线用户");
                         System.out.println("2 私聊用户");
                         System.out.println("3 群发消息");
@@ -89,6 +92,9 @@ public class QQView {
                         switch (key){
                             case "1":
                                 System.out.println("在线用户列表");
+
+                                new ClientService(user).getOnlineUser();
+
                                 break;
                             case "2":
                                 System.out.println("私聊用户");
