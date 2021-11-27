@@ -26,6 +26,7 @@ public class QQView {
     public static void main(String[] args) {
 
         try {
+
             new QQView().menuView();
         } catch (IOException e) {
             e.printStackTrace();
@@ -37,7 +38,6 @@ public class QQView {
      * show the QQ system menu
      */
     private void menuView() throws IOException {
-
         while (loop){
             System.out.println("==============网络登陆系统==============");
             System.out.println("1 登陆系统");
@@ -105,6 +105,7 @@ public class QQView {
                             case "9":
                                 System.out.println("退出系统成功!");
                                 //TODO 当用户选择退出登陆的时候，切断连接的通信线程；
+                                new ClientService(user).exitLogin();
                                 secLoop=false;
                                 loop=false;
                                 thirdLoop=false;

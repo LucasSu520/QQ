@@ -23,6 +23,7 @@ public class ClientService {
     boolean logUpSuccess;
 
 
+
     public ClientService() {
     }
 
@@ -33,6 +34,7 @@ public class ClientService {
     public void getOnlineUser() {
         Message ms=new Message();
         ms.setMesType(MesType.MESSAGE_GET_ONLINE_USERS);
+        ms.setSender(user.getId());
         try {
             ClientConnectServerThread ccst;
             ccst=ManageClientThread.hm.get(user);
@@ -76,6 +78,7 @@ public class ClientService {
             if (ms.getMesType()== MesType.MESSAGE_LOG_IN_SUCCESS){
                 ClientConnectServerThread ccs=new ClientConnectServerThread(logInSocket);
                 ccs.start();
+                System.out.println(ccs==null);
                 ManageClientThread.add(user,ccs);
                 isExist=true;
             }else {
@@ -142,5 +145,22 @@ public class ClientService {
             e.printStackTrace();
         }
         return logUpSuccess;
+    }
+
+    //向服务器发送退出系统的要求
+    public void exitLogin() {
+        Message message=new Message();
+        message.setMesType(MesType.MESSAGE_EXIT_SYSTEM);
+        message.setSender(user.getId());
+        ClientConnectServerThread ccst=ManageClientThread.hm.get(user);
+        logInSocket=ccst.getSocket();
+        try {
+            ObjectOutputStream oos=new ObjectOutputStream(logInSocket.getOutputStream());
+            oos.writeObject(message);
+            System.exit(0);//结束进程
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

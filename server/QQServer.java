@@ -76,7 +76,6 @@ public class QQServer extends Thread{
                 }
                 ObjectOutputStream oos;
                 ObjectInputStream ois;
-                System.out.println("登陆端口已经接通");
                 if (socket != null) {
                     try {
                         oos = new ObjectOutputStream(socket.getOutputStream());
@@ -87,8 +86,9 @@ public class QQServer extends Thread{
                                 ms.setMesType(MesType.MESSAGE_LOG_IN_SUCCESS);
                                 ServerConnectClientThread scc=new ServerConnectClientThread(socket);
                                 scc.start();
-                                ManageServerThread.add(checkUser1,scc);
+                                ManageServerThread.add(checkUser1.getId(),scc);
                                 oos.writeObject(ms);
+                                System.out.println("用户:"+checkUser1.getId()+" 登陆成功，持续保持通讯。。。");
                             }else {
                                 Message ms=new Message();
                                 ms.setMesType(MesType.MESSAGE_LOG_IN_FAIL);

@@ -6,16 +6,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class ManageServerThread {
-    public static HashMap<User, ServerConnectClientThread> hm=new HashMap<>();
-    public static void add(User user, ServerConnectClientThread scc){
-        hm.put(user,scc);
+    public static HashMap<String, ServerConnectClientThread> hm=new HashMap<>();
+    public static void add(String userId, ServerConnectClientThread scc){
+        hm.put(userId,scc);
     }
     public static String getOnlineUser(){
         String onlineList="";
-        Iterator<User> iterator=hm.keySet().iterator();
+        Iterator<String> iterator=hm.keySet().iterator();
         while (iterator.hasNext()){
-            onlineList +=iterator.next().getId()+" ";
+            onlineList +=iterator.next()+" ";
         }
         return onlineList;
+    }
+
+    public static void remove(String userId) {
+        hm.remove(userId);
     }
 }

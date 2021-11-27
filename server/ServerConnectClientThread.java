@@ -9,7 +9,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class ServerConnectClientThread extends Thread{
-    Socket socket;
+    private Socket socket;
 
     public ServerConnectClientThread(Socket socket) {
         this.socket = socket;
@@ -29,11 +29,27 @@ public class ServerConnectClientThread extends Thread{
                     message.setContent(onlineList);
                     ObjectOutputStream oos=new ObjectOutputStream(socket.getOutputStream());
                     oos.writeObject(message);
+                    System.out.println("用户:"+message.getSender()+" 索要在线用户列表，已经返回");
+                }else if (message.getMesType()==MesType.MESSAGE_EXIT_SYSTEM){
+
+                    ServerConnectClientThread scct=ManageServerThread.hm.get(message.getSender());
+                    Socket socket= scct.getSocket();
+                    ManageServerThread.remove(message.getSender());
+                    System.out.println("用户:"+message.getSender()+" 退出系统！");
+                    break;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 break;
             }
         }
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(Socket socket) {
+        this.socket = socket;
     }
 }
