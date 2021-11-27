@@ -92,12 +92,11 @@ public class QQView {
                         switch (key){
                             case "1":
                                 System.out.println("在线用户列表");
-
                                 new ClientService(user).getOnlineUser();
-
                                 break;
                             case "2":
                                 System.out.println("私聊用户");
+
                                 break;
                             case "3":
                                 System.out.println("群发消息");

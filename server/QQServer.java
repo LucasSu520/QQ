@@ -82,16 +82,25 @@ public class QQServer extends Thread{
                         ois=new ObjectInputStream(socket.getInputStream());
                         checkUser1=(User) ois.readObject();
                             if (checkUser(checkUser1.getId(),checkUser1.getPassword())){
-                                Message ms =new Message();
-                                ms.setMesType(MesType.MESSAGE_LOG_IN_SUCCESS);
-                                ServerConnectClientThread scc=new ServerConnectClientThread(socket);
-                                scc.start();
-                                ManageServerThread.add(checkUser1.getId(),scc);
-                                oos.writeObject(ms);
-                                System.out.println("用户:"+checkUser1.getId()+" 登陆成功，持续保持通讯。。。");
-                            }else {
+                                //判断该账户是否登陆
+                                if (!checkLogin(checkUser1)) {
+                                    Message ms = new Message();
+                                    ms.setMesType(MesType.MESSAGE_LOG_IN_SUCCESS);
+                                    ServerConnectClientThread scc = new ServerConnectClientThread(socket);
+                                    scc.start();
+                                    ManageServerThread.add(checkUser1.getId(), scc);
+                                    oos.writeObject(ms);
+                                    System.out.println("用户:" + checkUser1.getId() + " 登陆成功，持续保持通讯。。。");
+                                }else {
+                                    Message ms=new Message();
+                                    ms.setMesType(MesType.MESSAGE_LOG_IN_FAIL);
+                                    ms.setContent("该用户已登录");
+                                    oos.writeObject(ms);
+                                }
+                            }else{
                                 Message ms=new Message();
                                 ms.setMesType(MesType.MESSAGE_LOG_IN_FAIL);
+                                ms.setContent("账号密码错误！");
                                 oos.writeObject(ms);
                             }
                         } catch (IOException e) {
@@ -101,6 +110,12 @@ public class QQServer extends Thread{
                     }
                 }
             }
+        }
+
+        //判断当前用户是否已经登陆
+        private boolean checkLogin(User checkUser1) {
+            System.out.println(ManageServerThread.hm.get(checkUser1.getId())==null);
+            return !(ManageServerThread.hm.get(checkUser1.getId())==null);
         }
         //接受到了客户端的发送的客户数据检测登陆
         //接受客户端的注册数据，然后写入.dat的文件

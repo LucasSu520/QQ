@@ -65,10 +65,10 @@ public class ClientService {
         boolean isExist=false;
         ObjectOutputStream oos;
         ObjectInputStream ois;
+        //TODO 禁止登陆两次
         try {
             //发送用户到服务端
             logInSocket=new Socket(InetAddress.getLocalHost(),7777);
-            System.out.println("登陆接口已经连通");
             oos=new ObjectOutputStream(logInSocket.getOutputStream());
             oos.writeObject(user);
 
@@ -78,10 +78,10 @@ public class ClientService {
             if (ms.getMesType()== MesType.MESSAGE_LOG_IN_SUCCESS){
                 ClientConnectServerThread ccs=new ClientConnectServerThread(logInSocket);
                 ccs.start();
-                System.out.println(ccs==null);
                 ManageClientThread.add(user,ccs);
                 isExist=true;
             }else {
+                System.out.println(ms.getContent());
                 logInSocket.close();
             }
         } catch (Exception e) {
@@ -107,8 +107,6 @@ public class ClientService {
                 System.out.println("Id或者密码不符合规范，请重新填写");
                 isLoop = true;
             }else {
-                System.out.println("您输入的账号密码，符合要求，正在注册。。。。");
-
                 isLoop=false;
             }
         }
