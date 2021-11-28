@@ -154,6 +154,7 @@ public class QQServer extends Thread{
                             ms.setMesType(MesType.MESSAGE_LOG_UP_SUCCESS);
                         }
                         oos.writeObject(ms);
+                        socket.close();
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
                     }

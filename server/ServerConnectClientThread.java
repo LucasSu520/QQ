@@ -1,6 +1,6 @@
 package com.dltour.qq.server;
 
-import com.dltour.qq.client.ManageClientThread;
+
 import com.dltour.qq.common.MesType;
 import com.dltour.qq.common.Message;
 
@@ -24,6 +24,7 @@ public class ServerConnectClientThread extends Thread{
                 Message message = (Message) ois.readObject();
                 //后续的message处理
                 if (message.getMesType()== MesType.MESSAGE_GET_ONLINE_USERS){
+                    //获得用户在线列表
                     String onlineList=ManageServerThread.getOnlineUser();
                     message.setMesType(MesType.MESSAGE_RET_ONLINE_USERS);
                     message.setContent(onlineList);
@@ -31,12 +32,16 @@ public class ServerConnectClientThread extends Thread{
                     oos.writeObject(message);
                     System.out.println("用户:"+message.getSender()+" 索要在线用户列表，已经返回");
                 }else if (message.getMesType()==MesType.MESSAGE_EXIT_SYSTEM){
-
-                    ServerConnectClientThread scct=ManageServerThread.hm.get(message.getSender());
-                    Socket socket= scct.getSocket();
+                    //用户退出系统
                     ManageServerThread.remove(message.getSender());
                     System.out.println("用户:"+message.getSender()+" 退出系统！");
                     break;
+                }else if (message.getMesType()==MesType.MESSAGE_SEND_CHAT){
+                    //TODO 用户不在线可以先保存到数据库
+                     Socket socket= ManageServerThread.hm.get(message.getReceiver()).getSocket();
+                     ObjectOutputStream oos=new ObjectOutputStream(socket.getOutputStream());
+                     message.setMesType(MesType.MESSAGE_RECEIVE_CHAT);
+                     oos.writeObject(message);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

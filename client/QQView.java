@@ -26,7 +26,6 @@ public class QQView {
     public static void main(String[] args) {
 
         try {
-
             new QQView().menuView();
         } catch (IOException e) {
             e.printStackTrace();
@@ -96,7 +95,13 @@ public class QQView {
                                 break;
                             case "2":
                                 System.out.println("私聊用户");
-
+                                System.out.println("请输入您要私聊的用户:");
+                                s=new Scanner(System.in);
+                                String chatGetter=s.next();
+                                System.out.println("请输入您要发送的内容:(不能包含敏感内容)");
+                                s=new Scanner(System.in);
+                                String chatContent=s.next();
+                                new ClientService(user).privateChat(chatContent,chatGetter,user.getId());
                                 break;
                             case "3":
                                 System.out.println("群发消息");

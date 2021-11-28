@@ -31,13 +31,30 @@ public class ClientService {
         this.user = user;
     }
 
+    //用户之间私聊
+    public void privateChat(String chatContent,String chatReceiver,String chatSender){
+        Message ms=new Message();
+        ms.setMesType(MesType.MESSAGE_SEND_CHAT);
+        ms.setSender(chatSender);
+        ms.setContent(chatContent);
+        ms.setReceiver(chatReceiver);
+        ClientConnectServerThread ccst;
+        ccst=ManageClientThread.hm.get(user.getId());
+        try {
+            ObjectOutputStream oos=new ObjectOutputStream(ccst.getSocket().getOutputStream());
+            oos.writeObject(ms);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void getOnlineUser() {
         Message ms=new Message();
         ms.setMesType(MesType.MESSAGE_GET_ONLINE_USERS);
         ms.setSender(user.getId());
         try {
             ClientConnectServerThread ccst;
-            ccst=ManageClientThread.hm.get(user);
+            ccst=ManageClientThread.hm.get(user.getId());
             logInSocket= ccst.getSocket();
             ObjectOutputStream oos=new ObjectOutputStream(logInSocket.getOutputStream());
             oos.writeObject(ms);
@@ -78,7 +95,7 @@ public class ClientService {
             if (ms.getMesType()== MesType.MESSAGE_LOG_IN_SUCCESS){
                 ClientConnectServerThread ccs=new ClientConnectServerThread(logInSocket);
                 ccs.start();
-                ManageClientThread.add(user,ccs);
+                ManageClientThread.add(user.getId(),ccs);
                 isExist=true;
             }else {
                 System.out.println(ms.getContent());
@@ -142,6 +159,12 @@ public class ClientService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
+            logUpSocket.shutdownOutput();
+            logUpSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return logUpSuccess;
     }
 
@@ -150,7 +173,7 @@ public class ClientService {
         Message message=new Message();
         message.setMesType(MesType.MESSAGE_EXIT_SYSTEM);
         message.setSender(user.getId());
-        ClientConnectServerThread ccst=ManageClientThread.hm.get(user);
+        ClientConnectServerThread ccst=ManageClientThread.hm.get(user.getId());
         logInSocket=ccst.getSocket();
         try {
             ObjectOutputStream oos=new ObjectOutputStream(logInSocket.getOutputStream());

@@ -8,5 +8,6 @@ public class MesType {
     public static int MESSAGE_GET_ONLINE_USERS=4;   //获得用户
     public static int MESSAGE_RET_ONLINE_USERS=5;   //返回用户
     public static int MESSAGE_EXIT_SYSTEM=6;        //退出系统
-    public static int MESSAGE_CHAT=7;               //用户私聊
+    public static int MESSAGE_SEND_CHAT=7;          //发送私聊
+    public static int MESSAGE_RECEIVE_CHAT=8;       //接受私聊
 }
