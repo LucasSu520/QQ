@@ -69,7 +69,7 @@ public class ClientService {
     public boolean logIn(User user) throws IOException {
             logInSuccess=false;
             if (!accountExist(user)){
-                System.out.println("您的账号或者密码输入错误，请重新输入。");
+                System.out.println("您账号或者密码输入错误，请重新输入。");
             }else {
                 logInSuccess=true;
                 System.out.println("欢迎回来用户（"+user.getId()+"）!");
@@ -182,6 +182,22 @@ public class ClientService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    public void allChatContent(String allChatContent) {
+        ObjectOutputStream oos;
+        Message message=new Message();
+        message.setMesType(MesType.MESSAGE_SEND_ALL_CHAT);
+        message.setContent(allChatContent);
+        message.setSender(user.getId());
+        Socket socket=ManageClientThread.hm.get(user.getId()).getSocket();
+        try {
+            oos=new ObjectOutputStream(socket.getOutputStream());
+            message.setMesType(MesType.MESSAGE_SEND_ALL_CHAT);
+            message.setContent(allChatContent);
+            oos.writeObject(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

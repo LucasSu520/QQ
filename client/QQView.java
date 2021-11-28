@@ -5,7 +5,6 @@ import com.dltour.qq.common.User;
 
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.concurrent.CountDownLatch;
 
 
 //以后界面和逻辑一定要分开;
@@ -105,6 +104,10 @@ public class QQView {
                                 break;
                             case "3":
                                 System.out.println("群发消息");
+                                System.out.println("请输入您要群发的消息:");
+                                s=new Scanner(System.in);
+                                String allChatContent=s.next();
+                                new ClientService(user).allChatContent(allChatContent);
                                 break;
                             case "9":
                                 System.out.println("退出系统成功!");

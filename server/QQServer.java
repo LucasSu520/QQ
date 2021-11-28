@@ -114,7 +114,6 @@ public class QQServer extends Thread{
 
         //判断当前用户是否已经登陆
         private boolean checkLogin(User checkUser1) {
-            System.out.println(ManageServerThread.hm.get(checkUser1.getId())==null);
             return !(ManageServerThread.hm.get(checkUser1.getId())==null);
         }
         //接受到了客户端的发送的客户数据检测登陆
@@ -147,7 +146,6 @@ public class QQServer extends Thread{
                         if (user1!=null){
                             ms.setMesType(MesType.MESSAGE_LOG_UP_FAIL);
                             ms.setContent("该用户名已存在！");
-                            System.out.println(validUsers.size());
                         }else {
                             saveUser(user);
                             System.out.println("注册成功!");

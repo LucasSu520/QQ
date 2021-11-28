@@ -17,9 +17,6 @@ public class ClientConnectServerThread extends  Thread{
         this.socket = socket;
     }
 
-//    public void addThread(Thread){
-//        this.thread=thread;
-//    }
     public Socket getSocket() {
         return socket;
     }
@@ -46,6 +43,13 @@ public class ClientConnectServerThread extends  Thread{
                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     System.out.println(df.format(day)+" "+chatSender);
                     System.out.println(chatContent);
+                }else if (ms.getMesType()==MesType.MESSAGE_RECEIVE_ALL_CHAT) {
+                    String allChatContent=ms.getContent();
+                    String allChatSender=ms.getSender();
+                    Date day=new Date();
+                    SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    System.out.println(df.format(day)+" "+allChatSender);
+                    System.out.println(allChatContent);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

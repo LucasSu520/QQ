@@ -10,4 +10,6 @@ public class MesType {
     public static int MESSAGE_EXIT_SYSTEM=6;        //退出系统
     public static int MESSAGE_SEND_CHAT=7;          //发送私聊
     public static int MESSAGE_RECEIVE_CHAT=8;       //接受私聊
+    public static int MESSAGE_SEND_ALL_CHAT=9;      //发送群发
+    public static int MESSAGE_RECEIVE_ALL_CHAT=10;   //接受群发
 }

@@ -3,10 +3,12 @@ package com.dltour.qq.server;
 
 import com.dltour.qq.common.MesType;
 import com.dltour.qq.common.Message;
+import com.dltour.qq.common.User;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Iterator;
 
 public class ServerConnectClientThread extends Thread{
     private Socket socket;
@@ -42,6 +44,22 @@ public class ServerConnectClientThread extends Thread{
                      ObjectOutputStream oos=new ObjectOutputStream(socket.getOutputStream());
                      message.setMesType(MesType.MESSAGE_RECEIVE_CHAT);
                      oos.writeObject(message);
+                }else if (message.getMesType()==MesType.MESSAGE_SEND_ALL_CHAT){
+                    Iterator<String> iterator=ManageServerThread.hm.keySet().iterator();
+                    System.out.println("用户:"+message.getSender()+" 群发消息:"+message.getContent());
+                    message.setMesType(MesType.MESSAGE_RECEIVE_ALL_CHAT);
+                    while (iterator.hasNext()){
+//
+                        String onLineUserId = iterator.next().toString();
+
+                        if (!onLineUserId.equals(message.getSender())) {//排除群发消息的这个用户
+
+                            //进行转发message
+                            ObjectOutputStream oos =
+                                    new ObjectOutputStream(ManageServerThread.hm.get(onLineUserId).getSocket().getOutputStream());
+                            oos.writeObject(message);
+                        }
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
