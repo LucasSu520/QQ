@@ -5,6 +5,8 @@ import com.dltour.qq.common.MesType;
 import com.dltour.qq.common.Message;
 import com.dltour.qq.common.User;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -60,6 +62,12 @@ public class ServerConnectClientThread extends Thread{
                             oos.writeObject(message);
                         }
                     }
+                }else if (message.getMesType()==MesType.MESSAGE_SEND_FILE){
+                    Socket socket=ManageServerThread.hm.get(message.getReceiver()).getSocket();
+                    ObjectOutputStream oos=new ObjectOutputStream(socket.getOutputStream());
+                    System.out.println("接受到用户:"+message.getSender()+"发送的文件，开始向用户:"+message.getReceiver()+"发送文件");
+                    oos.writeObject(message);
+                    System.out.println("文件发送成功！");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -4,10 +4,14 @@ import com.dltour.qq.common.MesType;
 import com.dltour.qq.common.Message;
 
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 
 
 public class ClientConnectServerThread extends  Thread{
@@ -50,7 +54,26 @@ public class ClientConnectServerThread extends  Thread{
                     SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     System.out.println(df.format(day)+" "+allChatSender);
                     System.out.println(allChatContent);
-                }
+                }else if (ms.getMesType()==MesType.MESSAGE_SEND_FILE){
+                    //TODO how let the thread to change this when receive the Message_SEND_file
+                    //TODO let the receiver decide where to save
+//                        System.out.println("请输入您要保存的文件地址:");
+//                        Scanner s=new Scanner(System.in);
+//                        String fileAddress=s.next();
+                    String fileAddress="test1.txt";
+                        Date date=new Date();
+                        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+                        System.out.println(sdf.format(date)+ms.getSender());
+                        fileAddress="E:\\"+fileAddress;
+                    System.out.println("文件开始接受");
+                        FileOutputStream fos=new FileOutputStream(fileAddress,true);
+                    System.out.println("文件正在接受");
+                        fos.write(ms.getFileBytes());
+                        fos.close();
+                        System.out.println("===== 文件接受成功 ===== [File Name:e:\\"+fileAddress+"]");
+                    }
+//                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

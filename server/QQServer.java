@@ -89,11 +89,12 @@ public class QQServer extends Thread{
                                     ServerConnectClientThread scc = new ServerConnectClientThread(socket);
                                     scc.start();
                                     ManageServerThread.add(checkUser1.getId(), scc);
+                                    ms.setContent("用户:"+checkUser1.getId()+"登陆成功");
                                     oos.writeObject(ms);
                                     System.out.println("用户:" + checkUser1.getId() + " 登陆成功，持续保持通讯。。。");
                                 }else {
                                     Message ms=new Message();
-                                    ms.setMesType(MesType.MESSAGE_LOG_IN_FAIL);
+                                    ms.setMesType(MesType.MESSAGE_ALREADY_LOG_IN);
                                     ms.setContent("该用户已登录");
                                     oos.writeObject(ms);
                                 }

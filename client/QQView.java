@@ -84,6 +84,7 @@ public class QQView {
                         System.out.println("1 在线用户");
                         System.out.println("2 私聊用户");
                         System.out.println("3 群发消息");
+                        System.out.println("4 发送文件");
                         System.out.println("9 退出系统");
                         s=new Scanner(System.in);
                         key=s.next();
@@ -108,6 +109,16 @@ public class QQView {
                                 s=new Scanner(System.in);
                                 String allChatContent=s.next();
                                 new ClientService(user).allChatContent(allChatContent);
+                                break;
+                            case "4":
+                                System.out.println("发送文件");
+                                System.out.println("请输入您要发送的用户:");
+                                s=new Scanner(System.in);
+                                String fileReceiver=s.next();
+                                System.out.println("请输入您要发送的文件地址:");
+                                s=new Scanner(System.in);
+                                String fileAddress=s.next();
+                                new ClientService(user).sendFile(fileReceiver,fileAddress);
                                 break;
                             case "9":
                                 System.out.println("退出系统成功!");

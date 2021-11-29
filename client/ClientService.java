@@ -5,9 +5,7 @@ import com.dltour.qq.common.Message;
 import com.dltour.qq.common.User;
 
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
@@ -68,11 +66,9 @@ public class ClientService {
     //账号登陆，返回账号登陆是否成功
     public boolean logIn(User user) throws IOException {
             logInSuccess=false;
-            if (!accountExist(user)){
-                System.out.println("您账号或者密码输入错误，请重新输入。");
-            }else {
-                logInSuccess=true;
-                System.out.println("欢迎回来用户（"+user.getId()+"）!");
+            if (accountExist(user)) {
+                logInSuccess = true;
+                System.out.println("欢迎回来用户（" + user.getId() + "）!");
             }
             return logInSuccess;
         }
@@ -97,10 +93,10 @@ public class ClientService {
                 ccs.start();
                 ManageClientThread.add(user.getId(),ccs);
                 isExist=true;
-            }else {
-                System.out.println(ms.getContent());
+            }else if (ms.getMesType()==MesType.MESSAGE_ALREADY_LOG_IN){
                 logInSocket.close();
             }
+            System.out.println(ms.getContent());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -197,6 +193,44 @@ public class ClientService {
             message.setContent(allChatContent);
             oos.writeObject(message);
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendFile(String fileReceiver,String fileAddress) {
+        FileInputStream fis = null;
+        fileAddress="D:\\"+fileAddress;
+        File file=new File(fileAddress);
+        ObjectOutputStream oos = null;
+        Message ms=new Message();
+        Socket socket=ManageClientThread.hm.get(user.getId()).getSocket();
+        if (!file.exists()){
+            System.out.println("文件地址输入错误，请重新输入!");
+            return;
+        }
+        try {
+            oos=new ObjectOutputStream(socket.getOutputStream());
+            ms.setMesType(MesType.MESSAGE_SEND_FILE);
+            ms.setReceiver(fileReceiver);
+            ms.setSender(user.getId());
+            fis=new FileInputStream(fileAddress);
+            System.out.println("开始传输文件中=====");
+            byte[] bytes=new byte[(int)new File(fileAddress).length()];
+            fis.read(bytes);
+            ms.setFileBytes(bytes);
+            System.out.println("文件传输成功");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }if (fis!=null){
+            try {
+                fis.close();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        try {
+            oos.writeObject(ms);
+        }catch (IOException e){
             e.printStackTrace();
         }
     }
