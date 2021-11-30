@@ -3,10 +3,7 @@ package com.dltour.qq.server;
 
 import com.dltour.qq.common.MesType;
 import com.dltour.qq.common.Message;
-import com.dltour.qq.common.User;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;

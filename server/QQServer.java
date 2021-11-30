@@ -56,6 +56,7 @@ public class QQServer extends Thread{
             e.printStackTrace();
         }
         //新线程启动，一定要用start，别用run
+        new Thread(new ServerSendMessage()).start();
         new LogIn().start();
         new LogUp().start();
     }
