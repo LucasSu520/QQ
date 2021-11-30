@@ -4,14 +4,11 @@ import com.dltour.qq.common.MesType;
 import com.dltour.qq.common.Message;
 
 
-import java.io.DataInputStream;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Scanner;
 
 
 public class ClientConnectServerThread extends  Thread{
@@ -72,7 +69,9 @@ public class ClientConnectServerThread extends  Thread{
                         fos.write(ms.getFileBytes());
                         fos.close();
                         System.out.println("===== 文件接受成功 ===== [File Name:e:\\"+fileAddress+"]");
-                    }
+                    }else {
+                    System.out.println(ms.getContent());
+                }
 //                }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -13,6 +13,15 @@ public class Message implements Serializable {
     private byte[] fileBytes;
     private int fileLen=0;
     private String fileAddress;
+    private String date;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public byte[] getFileBytes() {
         return fileBytes;

@@ -16,7 +16,7 @@ public class QQServer extends Thread{
     User checkUser1;
     ServerSocket logUpServerSocket;
     ServerSocket logInServerSocket;
-    private static ConcurrentHashMap<String,User> validUsers=new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<String,User> validUsers=new ConcurrentHashMap<>();
     static {
         validUsers.put("100",new User("100","123456"));
         validUsers.put("200",new User("200","123456"));
@@ -87,11 +87,13 @@ public class QQServer extends Thread{
                                 if (!checkLogin(checkUser1)) {
                                     Message ms = new Message();
                                     ms.setMesType(MesType.MESSAGE_LOG_IN_SUCCESS);
-                                    ServerConnectClientThread scc = new ServerConnectClientThread(socket);
+                                    ServerConnectClientThread scc = new ServerConnectClientThread(socket,checkUser1.getId()
+                                    );
                                     scc.start();
                                     ManageServerThread.add(checkUser1.getId(), scc);
                                     ms.setContent("用户:"+checkUser1.getId()+"登陆成功");
                                     oos.writeObject(ms);
+                                    //检查离线列表中是否有离线消息
                                     System.out.println("用户:" + checkUser1.getId() + " 登陆成功，持续保持通讯。。。");
                                 }else {
                                     Message ms=new Message();
